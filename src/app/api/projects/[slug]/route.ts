@@ -13,9 +13,9 @@ const projectRepo = new MockProjectRepository();
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  context: { params: { slug: string } }
 ) {
-  const { slug } = params;
+  const { slug } = context.params;
 
   try {
     const project = await projectRepo.getProjectBySlug(slug);
