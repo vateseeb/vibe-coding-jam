@@ -11,11 +11,12 @@ const projectRepo = new MockProjectRepository();
  * @param context Request context containing params
  * @returns Project details or 404 if not found
  */
+// Fixed for Next.js 15: `params` is now async
 export async function GET(
   request: NextRequest,
-  context: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = context.params;
+  const { slug } = await context.params;
 
   try {
     const project = await projectRepo.getProjectBySlug(slug);

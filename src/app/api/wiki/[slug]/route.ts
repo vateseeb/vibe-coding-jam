@@ -11,11 +11,12 @@ const wikiRepo = new MockWikiRepository();
  * @param context Request context containing params
  * @returns Wiki content for the specified project or 404 if not found
  */
+// Fixed for Next.js 15: `params` is now async
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = params;
+  const { slug } = await context.params;
 
   try {
     const content = await wikiRepo.getProjectWikiContent(slug);

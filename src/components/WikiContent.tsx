@@ -30,7 +30,7 @@ export const WikiContent = ({ projectSlug }: WikiContentProps) => {
         
         if (data.content) {
           // Parse markdown and sanitize HTML
-          const parsedContent = marked.parse(data.content);
+          const parsedContent = await marked.parse(data.content);
           const sanitizedContent = DOMPurify.sanitize(parsedContent);
           setContent(sanitizedContent);
         } else {

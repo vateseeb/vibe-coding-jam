@@ -2,6 +2,8 @@ import ClientProjectsPage from "@/components/ClientProjectsPage";
 import { ProjectSummary } from "@/lib/types";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic'; // Explicitly mark page as dynamic
+
 async function getProjects(): Promise<ProjectSummary[]> {
   // In a real app, we'd use an environment variable for the API URL
   // and would handle server-side fetching properly
@@ -21,12 +23,14 @@ async function getProjects(): Promise<ProjectSummary[]> {
 export default async function ProjectsPage() {
   // Fetch projects data
   let projects: ProjectSummary[] = [];
-  let error = null;
+  let fetchError: Error | null = null;
   
   try {
     projects = await getProjects();
   } catch (e) {
-    error = e;
+    if (e instanceof Error) {
+      fetchError = e;
+    }
     console.error('Failed to load projects:', e);
   }
   
@@ -42,7 +46,7 @@ export default async function ProjectsPage() {
       </div>
       
       {/* Error state */}
-      {error && (
+      {fetchError && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
           Failed to load projects. Please try again later.
         </div>
@@ -55,7 +59,7 @@ export default async function ProjectsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="flex items-center justify-center h-64 bg-foreground/5 rounded-lg border border-foreground/10 p-6">
             <p className="text-center text-foreground/50">
-              {error ? 'Failed to load projects' : 'No projects available'}
+              {fetchError ? 'Failed to load projects' : 'No projects available'}
             </p>
           </div>
         </div>

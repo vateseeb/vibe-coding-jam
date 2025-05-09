@@ -27,12 +27,14 @@ async function getProject(slug: string): Promise<Project | null> {
   }
 }
 
+// Fixed for Next.js 15: `params` is now async
 export default async function ProjectDetailsPage({ 
   params 
 }: { 
-  params: { slug: string } 
+  params: Promise<{ slug: string }> 
 }) {
-  const project = await getProject(params.slug);
+  const { slug } = await params;
+  const project = await getProject(slug);
   
   if (!project) {
     notFound();
