@@ -48,11 +48,11 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Vote error:", error);
 
     // Handle project not found
-    if (error.message?.includes("not found")) {
+    if (error instanceof Error && error.message.includes("not found")) {
       return NextResponse.json({ error: error.message }, { status: 404 });
     }
 
